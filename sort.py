@@ -14,11 +14,11 @@ screen.geometry("{}x{}".format(screen_width,screen_height))
 
 """Creating the frame that will select the options"""
 frame = tk.Frame(screen, bg="#aeb7f2",width=screen_width, height=50)
-generte_button= ttk.Button(frame,text="Generate Random",command=lambda:generate())
+generate_button= ttk.Button(frame,text="Generate Random",command=lambda:generate())
 frame.grid_propagate(False)
 frame.rowconfigure(0,weight=2)
 frame.grid(row=0, column=0)
-generte_button.grid(sticky="ens")
+generate_button.grid(sticky="ens")
 
 
 
@@ -27,7 +27,7 @@ width=3
 number =int((screen_width-2)/width)
 rect_list=[]
 height_list=[]
-
+button_list=[0 for i in range(2)]
 #number =5
 
 """Creating the pane that will contain all the rectangles with different heights"""
@@ -35,21 +35,23 @@ rectangle_pane=tk.Canvas(screen,width=screen_width,height=screen_width)
 rectangle_pane.grid(row=1,column=0)
 rectangle_pane.config(background='#b5e1f5')
 
-"""creating the button that will bubble sort the list"""
+"""Creating Frame that will hold the sort buttons"""
 sort_frame = tk.Frame(screen,width=screen_width, height=50)
-sort_button= ttk.Button(sort_frame,text="Bubble sort",command=lambda:sort())
 sort_frame.grid_propagate(False)
 sort_frame.rowconfigure(0,weight=2)
 sort_frame.grid(row=2, column=0)
-sort_button.pack(side="left")
+
+"""creating the button that will bubble sort the list"""
+button_list[0]= ttk.Button(sort_frame,text="Bubble sort",command=lambda:sort(0))
+button_list[0].config(state="disabled")
+button_list[0].grid(row=0,column=0)
 
 """"Creating the button that will use selection sort"""
-sort_frame = tk.Frame(screen,width=screen_width, height=50)
-sort_button= ttk.Button(sort_frame,text="Selection sort",command=lambda:sort())
-sort_frame.grid_propagate(False)
-sort_frame.rowconfigure(0,weight=2)
-sort_frame.grid(row=2, column=0)
-sort_button.pack(side="left")
+button_list[1]= ttk.Button(sort_frame,text="Selection sort",command=lambda:sort(1))
+button_list[1].config(state="disabled")
+button_list[1].grid(row=0,column=1)
+
+
 
 def generate():
     """Generates a simple list with lineraly number representing the heights of rectangles"""
@@ -61,6 +63,7 @@ def generate():
     height_list=[int(max_height-(max_height-1)*(number-i)/number) for i in range(number)]
     sf(height_list)
     draw(height_list)
+    [x.config(state="enabled") for x in button_list]
 
 def draw(height_list):
     """Draws rectangles along the width of the rectangle pane with heights corresponding to the values in height list"""
@@ -89,17 +92,29 @@ def swap(i,f):
     rect_list[i]=rect_list[f]
     rect_list[f]=temp2
 
-def sort():
+def sort(i):
     global height_list
-    bubbleSort(height_list)
+    if i==0:
+        bubbleSort(height_list)
+    elif i==1:
+        selectionSort(height_list)
 
 def bubbleSort(arr):
-    global rect_list
+    [x.config(state="disabled") for x in button_list]
     n = len(arr)
     for i in range(n):
         for j in range(0, n-i-1):
             if arr[j] > arr[j+1] :
                 swap(j,j+1)
+
+def selectionSort(arr):
+    [x.config(state="disabled") for x in button_list]
+    for i in range(len(arr)):
+        max_idx =len(arr)-i-1
+        for j in range(len(arr)-i):
+            if arr[max_idx] < arr[j]:
+                max_idx = j
+        swap(max_idx,len(arr)-i-1)
 
 def main():
     tk.mainloop()
