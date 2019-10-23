@@ -27,7 +27,7 @@ width=3
 number =int((screen_width-2)/width)
 rect_list=[]
 height_list=[]
-button_list=[0 for i in range(2)]
+button_list=[0 for i in range(3)]
 #number =5
 
 """Creating the pane that will contain all the rectangles with different heights"""
@@ -50,6 +50,11 @@ button_list[0].grid(row=0,column=0)
 button_list[1]= ttk.Button(sort_frame,text="Selection sort",command=lambda:sort(1))
 button_list[1].config(state="disabled")
 button_list[1].grid(row=0,column=1)
+
+"""Creating the button that will use insertion sort"""
+button_list[2]= ttk.Button(sort_frame,text="Insertion sort",command=lambda:sort(1))
+button_list[2].config(state="disabled")
+button_list[2].grid(row=0,column=2)
 
 
 
@@ -98,6 +103,8 @@ def sort(i):
         bubbleSort(height_list)
     elif i==1:
         selectionSort(height_list)
+    elif i==2:
+        insertionSort(height_list)
 
 def bubbleSort(arr):
     [x.config(state="disabled") for x in button_list]
@@ -115,6 +122,17 @@ def selectionSort(arr):
             if arr[max_idx] < arr[j]:
                 max_idx = j
         swap(max_idx,len(arr)-i-1)
+
+
+def insertionSort(arr):
+    [x.config(state="disabled") for x in button_list]
+    n=len(arr)
+    for i in range(n):
+        current_element=arr[n-i-1]
+        for j in range(n-i-1,n):
+            if arr[j]<current_element:
+                swap(j-1,j)
+
 
 def main():
     tk.mainloop()
